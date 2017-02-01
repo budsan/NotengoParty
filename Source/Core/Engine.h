@@ -14,11 +14,12 @@ struct Engine
 	uint32_t flags;
 	uint32_t delta_time;
 	uint32_t running_time;
+
+	void Init(const char* name, int32_t w, int32_t h);
+	void Update();
+	void Quit();
+
+	bool IsRunning();
+	void Close();
 };
 
-void Engine_Init(Engine* engine, const char* name, int32_t w, int32_t h);
-void Engine_Update(Engine* engine);
-void Engine_Quit(Engine* engine);
-
-bool Engine_IsRunning(Engine* engine);
-void Engine_Close(Engine* engine);

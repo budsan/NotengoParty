@@ -17,9 +17,9 @@ void System_Update(Engine* engine)
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
-		/*bool handled = ImGui_ImplSdl_ProcessEvent(&event);
+		bool handled = ImGui_ImplSdl_ProcessEvent(&event);
 		if (handled)
-			continue;*/
+			continue;
 
 		if (event.type == SDL_WINDOWEVENT)
 		{
@@ -27,8 +27,8 @@ void System_Update(Engine* engine)
 			{
 			case SDL_WINDOWEVENT_CLOSE:
 			{
-				Engine_Close(engine);
-				//handled = true;
+				engine->Close();
+				handled = true;
 				break;
 			} 
 			}

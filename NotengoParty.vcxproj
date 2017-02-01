@@ -142,14 +142,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\imgui\imgui.cpp" />
+    <ClCompile Include="Source\Core\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Core\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="Source\Core\SDL_InputImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_RendererImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_SystemImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_WindowImpl.cpp" />
+    <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Engine.h" />
+    <ClInclude Include="Source\Core\imgui\imconfig.h" />
+    <ClInclude Include="Source\Core\imgui\imgui.h" />
+    <ClInclude Include="Source\Core\imgui\imgui_impl_sdl.h" />
+    <ClInclude Include="Source\Core\imgui\imgui_internal.h" />
+    <ClInclude Include="Source\Core\imgui\stb_rect_pack.h" />
+    <ClInclude Include="Source\Core\imgui\stb_textedit.h" />
+    <ClInclude Include="Source\Core\imgui\stb_truetype.h" />
     <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\Core\LightVector.h" />
     <ClInclude Include="Source\Core\Math.h" />
@@ -157,6 +168,7 @@
     <ClInclude Include="Source\Core\SDL_CommonImpl.h" />
     <ClInclude Include="Source\Core\System.h" />
     <ClInclude Include="Source\Core\Window.h" />
+    <ClInclude Include="Source\Game.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

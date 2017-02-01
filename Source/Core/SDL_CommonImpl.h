@@ -5,7 +5,9 @@
 #include "LightVector.h"
 
 #include <SDL.h>
-//#include "imgui_impl_sdl.h"
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl.h"
 
 struct Window_SDLImpl
 {

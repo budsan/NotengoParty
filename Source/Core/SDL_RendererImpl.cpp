@@ -10,7 +10,7 @@
 void Renderer_ImGui_NewFrame(Engine* engine)
 {
 	Window_SDLImpl* window = (Window_SDLImpl*)engine->window;
-	//ImGui_ImplSdl_NewFrame(window->sdl_window);
+	ImGui_ImplSdl_NewFrame(window->sdl_window);
 }
 
 void Renderer_Create(Engine* engine)
@@ -39,13 +39,13 @@ void Renderer_Create(Engine* engine)
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-	//ImGui_ImplSdl_Init(window->sdl_window);
+	ImGui_ImplSdl_Init(window->sdl_window);
 }
 
 void Renderer_Destroy(Engine* engine)
 {
 	SYS_ASSERT(engine->renderer != NULL);
-	//ImGui_ImplSdl_Shutdown();
+	ImGui_ImplSdl_Shutdown();
 
 	Renderer_SDLImpl* renderer = (Renderer_SDLImpl*)engine->renderer;
 	SDL_GL_DeleteContext((SDL_GLContext*)renderer->context);

@@ -16,7 +16,10 @@ void SysFree(void* ptr);
 
 #if defined(SDL_IMPL)
 
+#define SDL_MAIN_HANDLED
+
 #include <SDL.h>
+#include "imgui/imgui.h"
 
 #define SYS_ASSERT(...) SDL_assert(__VA_ARGS__)
 #else

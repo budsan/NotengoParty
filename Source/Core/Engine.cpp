@@ -7,37 +7,37 @@ enum EngineFlags
 	EngineFlagRunning = (1 << 0)
 };
 
-void Engine_Init(Engine* engine, const char* name, int32_t w, int32_t h)
+void Engine::Init(const char* name, int32_t w, int32_t h)
 {
-	memset(engine, 0, sizeof(Engine));
+	memset(this, 0, sizeof(Engine));
 
-	System_Init(engine);
-	Window_Create(engine, name, w, h);
-	Renderer_Create(engine);
+	System_Init(this);
+	Window_Create(this, name, w, h);
+	Renderer_Create(this);
 	Renderer_SetViewport((float) w, (float) h);
 
-	engine->flags = 0;
-	engine->flags |= EngineFlagRunning;
+	flags = 0;
+	flags |= EngineFlagRunning;
 }
 
-void Engine_Update(Engine* engine)
+void Engine::Update()
 {
-	System_Update(engine);
+	System_Update(this);
 }
 
-void Engine_Quit(Engine* engine)
+void Engine::Quit()
 {
-	Renderer_Destroy(engine);
-	Window_Destroy(engine);
-	System_Quit(engine);
+	Renderer_Destroy(this);
+	Window_Destroy(this);
+	System_Quit(this);
 }
 
-bool Engine_IsRunning(Engine* engine)
+bool Engine::IsRunning()
 {
-	return (engine->flags & EngineFlagRunning) > 0;
+	return (flags & EngineFlagRunning) > 0;
 }
 
-void Engine_Close(Engine* engine)
+void Engine::Close()
 {
-	engine->flags &= ~EngineFlagRunning;
+	flags &= ~EngineFlagRunning;
 }
