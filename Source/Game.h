@@ -4,7 +4,10 @@
 
 struct Game
 {
-	uint32_t dummy;
+	ImFontAtlas _fontAtlas;
+	ImFont* _font;
+	ImDrawList* _fontDrawList;
+	float _fontSize;
 
 	void Init(Engine* engine);
 	void Update(Engine* engine);
