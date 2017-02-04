@@ -7,6 +7,7 @@ struct Game
 	ImFontAtlas _fontAtlas;
 	ImFont* _font;
 	ImDrawList* _fontDrawList;
+
 	float _fontSize;
 
 	void Init(Engine* engine);

@@ -1,20 +1,24 @@
 #include "Game.h"
+#include "Core/Texture.h"
 
 void Game::Init(Engine* engine)
 {
 	_fontSize = 32;
-	_fontDrawList = (ImDrawList*) malloc(sizeof(ImDrawList));
+	_fontDrawList = (ImDrawList*)SysMalloc(sizeof(ImDrawList));
 	SYS_PLACEMENT_NEW(_fontDrawList) ImDrawList();
 	_font = _fontAtlas.AddFontFromFileTTF("Data/Fonts/ArvinLight.ttf", _fontSize);
 
 	unsigned char* pixels;
 	int width, height;
 	_fontAtlas.GetTexDataAsAlpha8(&pixels, &width, &height);
+	{
+		Texture2D_Description desc;
+		desc.width = width;
+		desc.height = height;
+		desc.format = TextureFormatA8;
 
-	//Needs to create a texture
-
-	//And finally set id here
-	_fontAtlas.TexID = (void *)(intptr_t) 0;
+		_fontAtlas.TexID = Texture2D_Create(engine, &desc, pixels);
+	}
 }
 
 void Game::Update(Engine* engine)
@@ -24,7 +28,9 @@ void Game::Update(Engine* engine)
 
 	ImVec2 fontPos(0, 0);
 	_fontDrawList->Clear();
-	//_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, testText, testTextEnd);
+	_fontDrawList->PushClipRectFullScreen();
+	_fontDrawList->PushTextureID(_fontAtlas.TexID);
+	_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, testText, testTextEnd);
 
 	Renderer_ImGui_NewFrame(engine);
 
@@ -50,7 +56,7 @@ void Game::Render(Engine* engine)
 
 void Game::Quit(Engine* engine)
 {
-	free(_fontDrawList);
+	SysFree(_fontDrawList);
 }
 
 

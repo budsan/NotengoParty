@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	game.Quit(&engine);
 	engine.Quit();
 
 	return 0;

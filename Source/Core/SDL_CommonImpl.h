@@ -5,6 +5,7 @@
 #include "LightVector.h"
 
 #include <SDL.h>
+#include <SDL_opengl.h>
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
@@ -21,3 +22,5 @@ struct Renderer_SDLImpl
 	SDL_GLContext context;
 	RendererState current;
 };
+
+typedef GLuint Texture2D_SDLImpl;
