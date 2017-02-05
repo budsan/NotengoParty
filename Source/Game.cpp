@@ -1,12 +1,13 @@
 #include "Game.h"
 #include "Core/Texture.h"
+#include "Core/imgui/imgui_impl_sdl.h"
 
 void Game::Init(Engine* engine)
 {
 	_fontSize = 32;
 	_fontDrawList = (ImDrawList*)SysMalloc(sizeof(ImDrawList));
 	SYS_PLACEMENT_NEW(_fontDrawList) ImDrawList();
-	_font = _fontAtlas.AddFontFromFileTTF("Data/Fonts/ArvinLight.ttf", _fontSize);
+	_font = _fontAtlas.AddFontFromFileTTF("Data/Fonts/ArvinRegular.ttf", _fontSize);
 
 	unsigned char* pixels;
 	int width, height;
@@ -23,34 +24,30 @@ void Game::Init(Engine* engine)
 
 void Game::Update(Engine* engine)
 {
-	const char testText[] = "Test";
-	const char* testTextEnd = testText + sizeof(testText);
+	const char testText[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed diam dui. Vivamus ultrices iaculis elit, non varius orci auctor.";
+	const char* testTextEnd = testText + sizeof(testText) - 1;
 
-	ImVec2 fontPos(0, 0);
+	ImVec2 fontPos(20, 20);
 	_fontDrawList->Clear();
 	_fontDrawList->PushClipRectFullScreen();
 	_fontDrawList->PushTextureID(_fontAtlas.TexID);
-	_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, testText, testTextEnd);
+	_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, testText, testTextEnd, 400);
 
 	Renderer_ImGui_NewFrame(engine);
-
-	const ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoSavedSettings
-		| ImGuiWindowFlags_NoMove
-		| ImGuiWindowFlags_NoResize
-		| ImGuiWindowFlags_NoCollapse;
-
-	bool menuOpen = true;
-	ImGui::SetNextWindowPosCenter();
-	ImGui::SetNextWindowSize(ImVec2(600, 600));
-	ImGui::Begin("Test", &menuOpen, windowFlags);
-	ImGui::LabelText("TestLabel", "");
-	ImGui::End();
 }
 
 void Game::Render(Engine* engine)
 {
 	Renderer_Clear(engine, 0, 0, 0, 255);
-	ImGui::Render();
+
+	ImDrawData RenderDrawData;
+	RenderDrawData.CmdLists = &_fontDrawList;
+	RenderDrawData.CmdListsCount = 1;
+	RenderDrawData.TotalVtxCount = _fontDrawList->VtxBuffer.Size;
+	RenderDrawData.TotalIdxCount = _fontDrawList->IdxBuffer.Size;
+
+	ImGui_ImplSdl_RenderDrawLists(&RenderDrawData);
+
 	Renderer_Present(engine);
 }
 
