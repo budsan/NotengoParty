@@ -21,17 +21,23 @@ void System_Update(Engine* engine)
 		if (handled)
 			continue;
 
-		if (event.type == SDL_WINDOWEVENT)
+		switch (event.type)
 		{
+		case SDL_WINDOWEVENT:
 			switch (event.window.event)
 			{
 			case SDL_WINDOWEVENT_CLOSE:
-			{
 				engine->Close();
 				handled = true;
 				break;
-			} 
 			}
+			break;
+		case SDL_JOYDEVICEADDED:
+			Input_SDL_Event_JoyDeviceAdded(&event);
+			break;
+		case SDL_JOYDEVICEREMOVED:
+			Input_SDL_Event_JoyDeviceRemoved(&event);
+			break;
 		}
 	}
 }

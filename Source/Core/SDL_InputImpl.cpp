@@ -2,6 +2,8 @@
 
 #include "Engine.h"
 #include "Input.h"
+#include "LightVector.h"
+
 #include <SDL.h>
 
 void Input_SetRelativeMouseMode(Engine* engine, int mode)
@@ -253,35 +255,113 @@ struct tMouseImpl
 
 tMouseImpl s_mouseImpl;
 
-tMouse Input_GetMouse(Engine* engine)
+Mouse Input_GetMouse(Engine* engine)
 {
 	s_mouseImpl.state = SDL_GetMouseState((int*)(&s_mouseImpl.x), (int*)(&s_mouseImpl.y));
 	
-	tMouse mouse;
-	mouse.impl = (tMouse::MouseImpl) &s_mouseImpl;
+	Mouse mouse;
+	mouse.impl = (Mouse::MouseImpl) &s_mouseImpl;
 	return mouse;
 }
 
-void Input_GetPosition(tMouse mouse, int32_t* x, int32_t* y)
+void Input_GetPosition(Mouse mouse, int32_t* x, int32_t* y)
 {
 	tMouseImpl* mouseImpl = (tMouseImpl*) mouse.impl;
 	*x = mouseImpl->x;
 	*y = mouseImpl->y;
 }
 
-bool Input_IsButtonPressed(tMouse mouse, tMouse::Button button)
+bool Input_IsButtonPressed(Mouse mouse, Mouse::Button button)
 {
 	tMouseImpl* mouseImpl = (tMouseImpl*)mouse.impl;
 	int sdlbutton;
 	switch (button)
 	{
-	case tMouse::Button_Unknown: sdlbutton = 0; break;
-	case tMouse::Button_Left:    sdlbutton = SDL_BUTTON_LEFT; break;
-	case tMouse::Button_Middle:  sdlbutton = SDL_BUTTON_MIDDLE; break;
-	case tMouse::Button_Right:   sdlbutton = SDL_BUTTON_RIGHT; break;
+	case Mouse::Button_Unknown: sdlbutton = 0; break;
+	case Mouse::Button_Left:    sdlbutton = SDL_BUTTON_LEFT; break;
+	case Mouse::Button_Middle:  sdlbutton = SDL_BUTTON_MIDDLE; break;
+	case Mouse::Button_Right:   sdlbutton = SDL_BUTTON_RIGHT; break;
 	default:                     sdlbutton = 0; break;
 	}
 
 	return (mouseImpl->state & SDL_BUTTON(sdlbutton)) > 0;
 }
+
+Input_ControllerCallbacks _controller_callbacks =
+{
+	nullptr,
+	nullptr,
+	nullptr
+};
+
+struct JoystickHandler
+{
+	SDL_Joystick *joy;
+	ControllerInfo info;
+};
+
+LightVector<JoystickHandler> _joysticks;
+
+void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks)
+{
+	_controller_callbacks = callbacks;
+}
+
+void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
+{
+	int32_t which = event->jdevice.which;
+	if (_joysticks.capacity() <= which)
+		_joysticks.reserve(which + 32);
+
+	if (_joysticks.size() <= which)
+	{
+		size_t i = _joysticks.size();
+		_joysticks.resize(which + 1);
+		for (; i < _joysticks.size(); i++)
+			_joysticks[i].joy = nullptr;
+	}
+
+	SDL_Joystick* joy = SDL_JoystickOpen(which);
+	
+
+	if (joy)
+	{
+		JoystickHandler& handler = _joysticks[which];
+		handler.joy = joy;
+
+		ControllerInfo info =
+		{
+			which,
+			SDL_JoystickNumAxes(joy),
+			SDL_JoystickNumButtons(joy),
+			SDL_JoystickNumBalls(joy),
+			SDL_JoystickNameForIndex(which)
+		};
+
+		handler.info = info;
+
+		if (_controller_callbacks.added != nullptr)
+		{
+			_controller_callbacks.added(_controller_callbacks.data, &handler.info);
+		}
+	}
+}
+
+void Input_SDL_Event_JoyDeviceRemoved(SDL_Event* event)
+{
+	int32_t which = event->jdevice.which;
+	SYS_ASSERT(_joysticks.size() > which);
+
+	JoystickHandler& handler = _joysticks[which];
+	if (SDL_JoystickGetAttached(handler.joy))
+		SDL_JoystickClose(handler.joy);
+
+	handler.joy = nullptr;
+
+	if (_controller_callbacks.removed != nullptr)
+	{
+		_controller_callbacks.removed(_controller_callbacks.data, &handler.info);
+	}
+}
+
 #endif

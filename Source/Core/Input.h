@@ -122,7 +122,7 @@ struct tKeyboard
 tKeyboard Input_GetKeyboard(Engine* engine);
 bool Input_IsKeyPressed(tKeyboard keyboard, tKeyboard::Key key);
 
-struct tMouse
+struct Mouse
 {
 	enum Button
 	{
@@ -138,6 +138,27 @@ struct tMouse
 
 void Input_SetRelativeMouseMode(Engine* engine, int mode);
 
-tMouse Input_GetMouse(Engine* engine);
-void Input_GetPosition(tMouse mouse, int32_t* x, int32_t* y);
-bool Input_IsButtonPressed(tMouse mouse, tMouse::Button key);
+Mouse Input_GetMouse(Engine* engine);
+void Input_GetPosition(Mouse mouse, int32_t* x, int32_t* y);
+bool Input_IsButtonPressed(Mouse mouse, Mouse::Button key);
+
+struct ControllerInfo
+{
+	size_t Id;
+	size_t numAxes;
+	size_t NumButtons;
+	size_t NumTrackballs;
+	const char* Name;
+};
+
+typedef void(*Input_ControllerAdded)(void* data, const ControllerInfo* info);
+typedef void(*Input_ControllerRemoved)(void* data, const ControllerInfo* info);
+
+struct Input_ControllerCallbacks
+{
+	void* data;
+	Input_ControllerAdded added;
+	Input_ControllerRemoved removed;
+};
+
+void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks);

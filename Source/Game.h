@@ -8,6 +8,10 @@ struct Game
 	ImFont* _font;
 	ImDrawList* _fontDrawList;
 
+	Input_ControllerCallbacks _controllerCallback;
+	const char* _text;
+	uint32_t _color;
+
 	float _fontSize;
 
 	void Init(Engine* engine);

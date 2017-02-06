@@ -1,6 +1,23 @@
 #include "Game.h"
+#include "Core/Input.h"
 #include "Core/Texture.h"
 #include "Core/imgui/imgui_impl_sdl.h"
+
+static char _textBuffer[128];
+
+void Game_ControllerAdded(void* inst, const ControllerInfo* info)
+{
+	sprintf_s(_textBuffer, sizeof(_textBuffer), "%s", info->Name);
+	reinterpret_cast<Game*>(inst)->_text = _textBuffer;
+	reinterpret_cast<Game*>(inst)->_color = 0xFFFFFFFF;
+}
+
+void Game_ControllerRemoved(void* inst, const ControllerInfo* info)
+{
+	sprintf_s(_textBuffer, sizeof(_textBuffer), "%s", info->Name);
+	reinterpret_cast<Game*>(inst)->_text = _textBuffer;
+	reinterpret_cast<Game*>(inst)->_color = 0xFF0000FF;
+}
 
 void Game::Init(Engine* engine)
 {
@@ -20,18 +37,28 @@ void Game::Init(Engine* engine)
 
 		_fontAtlas.TexID = Texture2D_Create(engine, &desc, pixels);
 	}
+
+	_controllerCallback = 
+	{
+		this,
+		Game_ControllerAdded,
+		Game_ControllerRemoved,
+	};
+
+	Input_SetControllerCallbacks(_controllerCallback);
+
+	const char noneText[] = "None";
+	_text = noneText;
+	_color = 0xFFFFFFFF;
 }
 
 void Game::Update(Engine* engine)
 {
-	const char testText[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed diam dui. Vivamus ultrices iaculis elit, non varius orci auctor.";
-	const char* testTextEnd = testText + sizeof(testText) - 1;
-
 	ImVec2 fontPos(20, 20);
 	_fontDrawList->Clear();
 	_fontDrawList->PushClipRectFullScreen();
 	_fontDrawList->PushTextureID(_fontAtlas.TexID);
-	_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, testText, testTextEnd, 400);
+	_fontDrawList->AddText(_font, _fontSize, fontPos, _color, _text, NULL, 400);
 
 	Renderer_ImGui_NewFrame(engine);
 }
