@@ -162,3 +162,4 @@ struct Input_ControllerCallbacks
 };
 
 void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks);
+const ControllerInfo* Input_GetControllerInfo(size_t Id);

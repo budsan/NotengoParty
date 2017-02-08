@@ -7,16 +7,19 @@ static char _textBuffer[128];
 
 void Game_ControllerAdded(void* inst, const ControllerInfo* info)
 {
-	sprintf_s(_textBuffer, sizeof(_textBuffer), "%s", info->Name);
+	Game* game = reinterpret_cast<Game*>(inst);
+	game->_lastJoystickId = game->_lastJoystickId <= info->Id ? info->Id+1 : game->_lastJoystickId;
+
+	/*sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d. tb %d", info->Name, info->Id, info->NumButtons, info->NumButtons, info->numAxes, info->NumTrackballs);
 	reinterpret_cast<Game*>(inst)->_text = _textBuffer;
-	reinterpret_cast<Game*>(inst)->_color = 0xFFFFFFFF;
+	reinterpret_cast<Game*>(inst)->_color = 0xFFFFFFFF;*/
 }
 
 void Game_ControllerRemoved(void* inst, const ControllerInfo* info)
 {
-	sprintf_s(_textBuffer, sizeof(_textBuffer), "%s", info->Name);
+	/*sprintf_s(_textBuffer, sizeof(_textBuffer), "%s", info->Name);
 	reinterpret_cast<Game*>(inst)->_text = _textBuffer;
-	reinterpret_cast<Game*>(inst)->_color = 0xFF0000FF;
+	reinterpret_cast<Game*>(inst)->_color = 0xFF0000FF;*/
 }
 
 void Game::Init(Engine* engine)
@@ -38,7 +41,7 @@ void Game::Init(Engine* engine)
 		_fontAtlas.TexID = Texture2D_Create(engine, &desc, pixels);
 	}
 
-	_controllerCallback = 
+	Input_ControllerCallbacks _controllerCallback =
 	{
 		this,
 		Game_ControllerAdded,
@@ -46,20 +49,27 @@ void Game::Init(Engine* engine)
 	};
 
 	Input_SetControllerCallbacks(_controllerCallback);
-
-	const char noneText[] = "None";
-	_text = noneText;
-	_color = 0xFFFFFFFF;
+	_lastJoystickId = 0;
 }
 
 void Game::Update(Engine* engine)
 {
-	ImVec2 fontPos(20, 20);
 	_fontDrawList->Clear();
 	_fontDrawList->PushClipRectFullScreen();
 	_fontDrawList->PushTextureID(_fontAtlas.TexID);
-	_fontDrawList->AddText(_font, _fontSize, fontPos, _color, _text, NULL, 400);
 
+	for (size_t i = 0; i < _lastJoystickId; i++)
+	{
+		ImVec2 fontPos(20, i * (10 + _fontSize) +  20);
+		const ControllerInfo* info = Input_GetControllerInfo(i);
+
+		if (info != nullptr)
+		{
+			sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d. tb %d", info->Name, info->Id, info->NumButtons, info->NumButtons, info->numAxes, info->NumTrackballs);
+			_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
+		}
+	}
+	
 	Renderer_ImGui_NewFrame(engine);
 }
 
@@ -73,7 +83,8 @@ void Game::Render(Engine* engine)
 	RenderDrawData.TotalVtxCount = _fontDrawList->VtxBuffer.Size;
 	RenderDrawData.TotalIdxCount = _fontDrawList->IdxBuffer.Size;
 
-	ImGui_ImplSdl_RenderDrawLists(&RenderDrawData);
+	ImGuiIO& io = ImGui::GetIO();
+	io.RenderDrawListsFn(&RenderDrawData);
 
 	Renderer_Present(engine);
 }

@@ -7,12 +7,8 @@ struct Game
 	ImFontAtlas _fontAtlas;
 	ImFont* _font;
 	ImDrawList* _fontDrawList;
-
-	Input_ControllerCallbacks _controllerCallback;
-	const char* _text;
-	uint32_t _color;
-
 	float _fontSize;
+	size_t _lastJoystickId;
 
 	void Init(Engine* engine);
 	void Update(Engine* engine);

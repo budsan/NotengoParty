@@ -297,6 +297,7 @@ Input_ControllerCallbacks _controller_callbacks =
 struct JoystickHandler
 {
 	SDL_Joystick *joy;
+	int32_t instanceId;
 	ControllerInfo info;
 };
 
@@ -305,6 +306,11 @@ LightVector<JoystickHandler> _joysticks;
 void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks)
 {
 	_controller_callbacks = callbacks;
+}
+
+const ControllerInfo* Input_GetControllerInfo(size_t Id)
+{
+	return (_joysticks.size() > Id && _joysticks[Id].joy != nullptr) ? &_joysticks[Id].info : nullptr;
 }
 
 void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
@@ -322,12 +328,11 @@ void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
 	}
 
 	SDL_Joystick* joy = SDL_JoystickOpen(which);
-	
-
 	if (joy)
 	{
 		JoystickHandler& handler = _joysticks[which];
 		handler.joy = joy;
+		handler.instanceId = SDL_JoystickInstanceID(joy);
 
 		ControllerInfo info =
 		{
@@ -349,10 +354,18 @@ void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
 
 void Input_SDL_Event_JoyDeviceRemoved(SDL_Event* event)
 {
-	int32_t which = event->jdevice.which;
-	SYS_ASSERT(_joysticks.size() > which);
+	size_t index = 0;
+	for (; index < _joysticks.size(); index++)
+	{
+		if (_joysticks[index].joy && _joysticks[index].instanceId == event->jdevice.which)
+		{
+			break;
+		}
+	}
 
-	JoystickHandler& handler = _joysticks[which];
+	SYS_ASSERT(index != _joysticks.size());
+
+	JoystickHandler& handler = _joysticks[index];
 	if (SDL_JoystickGetAttached(handler.joy))
 		SDL_JoystickClose(handler.joy);
 
