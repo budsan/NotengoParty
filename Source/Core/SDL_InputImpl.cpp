@@ -297,6 +297,7 @@ Input_ControllerCallbacks _controller_callbacks =
 struct JoystickHandler
 {
 	SDL_Joystick *joy;
+	int32_t index;
 	int32_t instanceId;
 	ControllerInfo info;
 };
@@ -315,28 +316,34 @@ const ControllerInfo* Input_GetControllerInfo(size_t Id)
 
 void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
 {
-	int32_t which = event->jdevice.which;
-	if (_joysticks.capacity() <= which)
-		_joysticks.reserve(which + 32);
+	size_t joyId = 0;
+	for (; joyId < _joysticks.size(); joyId++)
+		if (_joysticks[joyId].joy == nullptr)
+			break;
 
-	if (_joysticks.size() <= which)
+	if (_joysticks.capacity() <= joyId)
+		_joysticks.reserve(joyId + 32);
+
+	if (_joysticks.size() <= joyId)
 	{
 		size_t i = _joysticks.size();
-		_joysticks.resize(which + 1);
+		_joysticks.resize(joyId + 1);
 		for (; i < _joysticks.size(); i++)
 			_joysticks[i].joy = nullptr;
 	}
 
+	int32_t which = event->jdevice.which;
 	SDL_Joystick* joy = SDL_JoystickOpen(which);
 	if (joy)
 	{
-		JoystickHandler& handler = _joysticks[which];
+		JoystickHandler& handler = _joysticks[joyId];
 		handler.joy = joy;
+		handler.index = which;
 		handler.instanceId = SDL_JoystickInstanceID(joy);
 
 		ControllerInfo info =
 		{
-			which,
+			joyId,
 			SDL_JoystickNumAxes(joy),
 			SDL_JoystickNumButtons(joy),
 			SDL_JoystickNumBalls(joy),

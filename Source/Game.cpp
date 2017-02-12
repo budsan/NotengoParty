@@ -79,9 +79,9 @@ void Game::Render(Engine* engine)
 
 	ImDrawData RenderDrawData;
 	RenderDrawData.CmdLists = &_fontDrawList;
-	RenderDrawData.CmdListsCount = 1;
-	RenderDrawData.TotalVtxCount = _fontDrawList->VtxBuffer.Size;
-	RenderDrawData.TotalIdxCount = _fontDrawList->IdxBuffer.Size;
+	RenderDrawData.CmdListsCount = _fontDrawList->VtxBuffer.size() > 0 ? 1 : 0;
+	RenderDrawData.TotalVtxCount = _fontDrawList->VtxBuffer.size();
+	RenderDrawData.TotalIdxCount = _fontDrawList->IdxBuffer.size();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.RenderDrawListsFn(&RenderDrawData);
