@@ -303,31 +303,36 @@ struct JoystickHandler
 };
 
 LightVector<JoystickHandler> _joysticks;
+LightVector<ControllerState> _joysticksState;
 
 void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks)
 {
 	_controller_callbacks = callbacks;
 }
 
-const ControllerInfo* Input_GetControllerInfo(size_t Id)
+const ControllerInfo* Input_GetControllerInfo(uint16_t Id)
 {
 	return (_joysticks.size() > Id && _joysticks[Id].joy != nullptr) ? &_joysticks[Id].info : nullptr;
 }
 
 void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
 {
-	size_t joyId = 0;
+	uint16_t joyId = 0;
 	for (; joyId < _joysticks.size(); joyId++)
 		if (_joysticks[joyId].joy == nullptr)
 			break;
 
 	if (_joysticks.capacity() <= joyId)
+	{
 		_joysticks.reserve(joyId + 32);
-
+		_joysticksState.reserve(joyId + 32);
+	}
+	
 	if (_joysticks.size() <= joyId)
 	{
 		size_t i = _joysticks.size();
 		_joysticks.resize(joyId + 1);
+		_joysticksState.resize(joyId + 1);
 		for (; i < _joysticks.size(); i++)
 			_joysticks[i].joy = nullptr;
 	}
@@ -346,7 +351,6 @@ void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
 			joyId,
 			SDL_JoystickNumAxes(joy),
 			SDL_JoystickNumButtons(joy),
-			SDL_JoystickNumBalls(joy),
 			SDL_JoystickNameForIndex(which)
 		};
 
@@ -382,6 +386,31 @@ void Input_SDL_Event_JoyDeviceRemoved(SDL_Event* event)
 	{
 		_controller_callbacks.removed(_controller_callbacks.data, &handler.info);
 	}
+}
+
+void Input_SDL_JoysticksUpdateState()
+{
+	for (size_t i = 0; i < _joysticks.size(); i++)
+	{
+		JoystickHandler& handler = _joysticks[i];
+		uint32_t butMask = 0;
+		if (handler.joy != nullptr)
+		{
+			SYS_ASSERT(handler.info.NumButtons <= (sizeof(butMask) * 8));
+			for (size_t butInd = 0; butInd < handler.info.NumButtons; butInd++)
+			{
+				butMask |= SDL_JoystickGetButton(handler.joy, butInd) << butInd;
+			}
+		}
+
+		_joysticksState[i].ButtonMask = butMask;
+	}
+}
+
+const ControllerState * Input_GetControllerState(uint16_t Id)
+{
+	SYS_ASSERT(Id <= _joysticksState.size());
+	return &_joysticksState[Id];
 }
 
 #endif

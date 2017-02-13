@@ -22,6 +22,17 @@ void Game_ControllerRemoved(void* inst, const ControllerInfo* info)
 	reinterpret_cast<Game*>(inst)->_color = 0xFF0000FF;*/
 }
 
+const char *int_to_binary(uint32_t x)
+{
+	static char b[33];
+	uint32_t i;
+	for (i = 0; i < 32; i++)
+		b[i] = (x & (1 << i)) ? '1' : '0';
+
+	b[32] = '\0';
+	return b;
+}
+
 void Game::Init(Engine* engine)
 {
 	_fontSize = 32;
@@ -60,12 +71,19 @@ void Game::Update(Engine* engine)
 
 	for (size_t i = 0; i < _lastJoystickId; i++)
 	{
-		ImVec2 fontPos(20, i * (10 + _fontSize) +  20);
+		ImVec2 fontPos(20, i * 2 * (10 + _fontSize ) +  20);
 		const ControllerInfo* info = Input_GetControllerInfo(i);
+		const ControllerState* state = Input_GetControllerState(i);
 
 		if (info != nullptr)
 		{
-			sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d. tb %d", info->Name, info->Id, info->NumButtons, info->NumButtons, info->numAxes, info->NumTrackballs);
+			sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d.\n%s", 
+				info->Name, 
+				info->Id, 
+				info->NumButtons,
+				info->numAxes,
+				int_to_binary(state->ButtonMask));
+
 			_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
 		}
 	}

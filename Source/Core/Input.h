@@ -144,10 +144,9 @@ bool Input_IsButtonPressed(Mouse mouse, Mouse::Button key);
 
 struct ControllerInfo
 {
-	size_t Id;
-	size_t numAxes;
-	size_t NumButtons;
-	size_t NumTrackballs;
+	uint16_t Id;
+	uint16_t numAxes;
+	uint16_t NumButtons;
 	const char* Name;
 };
 
@@ -162,4 +161,11 @@ struct Input_ControllerCallbacks
 };
 
 void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks);
-const ControllerInfo* Input_GetControllerInfo(size_t Id);
+const ControllerInfo* Input_GetControllerInfo(uint16_t Id);
+
+struct ControllerState
+{
+	uint32_t ButtonMask;
+};
+
+const ControllerState* Input_GetControllerState(uint16_t Id);

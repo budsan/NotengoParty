@@ -104,6 +104,9 @@
     <ClInclude Include="Source\Core\Texture.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Memory.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Data\Fonts\ArvinLight.ttf">

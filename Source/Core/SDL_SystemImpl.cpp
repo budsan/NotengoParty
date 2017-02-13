@@ -40,6 +40,8 @@ void System_Update(Engine* engine)
 			break;
 		}
 	}
+
+	Input_SDL_JoysticksUpdateState();
 }
 
 void System_Quit(Engine* engine)
