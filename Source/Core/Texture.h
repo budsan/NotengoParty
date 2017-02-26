@@ -24,3 +24,4 @@ struct Texture2D_Description
 };
 
 TextureType Texture2D_Create(Engine* engine, Texture2D_Description* desc, void* pixels);
+void Texture2D_Destroy(Engine* engine, TextureType texture);

@@ -61,6 +61,16 @@ void System_Sleep(uint32_t ticks)
 	SDL_Delay(ticks);
 }
 
+const char* System_GetClipboardText()
+{
+	return SDL_GetClipboardText();
+}
+
+bool System_SetClipboardText(const char *text)
+{
+	return SDL_SetClipboardText(text) < 0 ? false : true;
+}
+
 void* SysMalloc(size_t size)
 {
 	debug_allocations++;

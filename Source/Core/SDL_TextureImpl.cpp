@@ -25,5 +25,10 @@ TextureType Texture2D_Create(Engine* engine, Texture2D_Description* desc, void* 
 	return reinterpret_cast<TextureType>((intptr_t)tex2d);
 }
 
+void Texture2D_Destroy(Engine* engine, TextureType texture)
+{
+	glDeleteTextures(1, (const GLuint*) &texture);
+}
+
 
 #endif

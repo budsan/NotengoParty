@@ -14,7 +14,7 @@ void Engine::Init(const char* name, int32_t w, int32_t h)
 	System_Init(this);
 	Window_Create(this, name, w, h);
 	Renderer_Create(this);
-	Renderer_SetViewport((float) w, (float) h);
+	Renderer_SetViewport(0, 0, (float) w, (float) h);
 
 	flags = 0;
 	flags |= EngineFlagRunning;

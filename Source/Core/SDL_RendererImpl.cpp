@@ -68,14 +68,9 @@ void perspectiveGL(GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar
 	glFrustum(-fW, fW, -fH, fH, zNear, zFar);
 }
 
-void Renderer_SetViewport(float width, float height)
+void Renderer_SetViewport(float TopLeftX, float TopLeftY, float width, float height)
 {
-	GLfloat ratio = (GLfloat)width / (GLfloat)height;
-	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	perspectiveGL(45.0f, ratio, 0.1f, 10000.0f);
-	glMatrixMode(GL_MODELVIEW);
+	glViewport(TopLeftX, TopLeftY, (GLsizei)width, (GLsizei)height);
 }
 
 void Renderer_DrawLogic(Engine* engine, DrawList* drawlist)

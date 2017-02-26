@@ -35,3 +35,6 @@ inline void operator delete(void*, ImPlacementNewDummy, void*) {}
 
 uint32_t System_Ticks();
 void System_Sleep(uint32_t ticks);
+
+const char* System_GetClipboardText();
+bool System_SetClipboardText(const char *text);

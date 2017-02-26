@@ -109,6 +109,7 @@ void Game::Render(Engine* engine)
 
 void Game::Quit(Engine* engine)
 {
+	Texture2D_Destroy(engine, _fontAtlas.TexID);
 	SysFree(_fontDrawList);
 }
 

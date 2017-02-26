@@ -5,7 +5,7 @@
 
 struct Engine;
 
-struct tKeyboard
+struct Keyboard
 {
 	enum Key
 	{
@@ -119,8 +119,8 @@ struct tKeyboard
 	KeyboardImpl impl;
 };
 
-tKeyboard Input_GetKeyboard(Engine* engine);
-bool Input_IsKeyPressed(tKeyboard keyboard, tKeyboard::Key key);
+Keyboard Input_GetKeyboard(Engine* engine);
+bool Input_IsKeyPressed(Keyboard keyboard, Keyboard::Key key);
 
 struct Mouse
 {
@@ -138,6 +138,7 @@ struct Mouse
 
 void Input_SetRelativeMouseMode(Engine* engine, int mode);
 
+void Input_ShowCursor(bool enable);
 Mouse Input_GetMouse(Engine* engine);
 void Input_GetPosition(Mouse mouse, int32_t* x, int32_t* y);
 bool Input_IsButtonPressed(Mouse mouse, Mouse::Button key);
