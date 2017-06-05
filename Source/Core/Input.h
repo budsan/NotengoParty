@@ -166,7 +166,30 @@ const ControllerInfo* Input_GetControllerInfo(uint16_t Id);
 
 struct ControllerState
 {
-	uint32_t ButtonMask;
+	enum
+	{
+		Hat_Centered = 0x0,  // 0000 0x0 CENTERED
+		Hat_Right = 0x1,     // 0001 0x1 RIGHT
+		Hat_Left = 0x2,      // 0010 0x2 LEFT
+		                     // 0011 0x3 CENTERED
+		Hat_Up = 0x4,        // 0100 0x4 UP
+		Hat_LeftUp = 0x5,    // 0101 0x5 LEFTUP
+		Hat_RightUp = 0x6,   // 0110 0x6 RIGHTUP
+		                     // 0111 0x7 UP
+		Hat_Down = 0x8,      // 1000 0x8 DOWN
+		Hat_LeftDown = 0x9,  // 1001 0x9 LEFTDOWN
+		Hat_RightDown = 0xA, // 1010 0xA RIGHTDOWN
+		                     // 1011 0xB DOWN
+		                     // 1100 0xC CENTERED
+		                     // 1101 0xD LEFT
+		                     // 1110 0xE RIGHT
+		                     // 1111 0xF CENTERED
+	};
+
+	uint8_t HatState;
+	uint32_t ButtonMaskState;
+	uint32_t ButtonMaskUp;
+	uint32_t ButtonMaskDown;
 };
 
 const ControllerState* Input_GetControllerState(uint16_t Id);

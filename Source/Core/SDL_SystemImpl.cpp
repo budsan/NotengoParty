@@ -13,6 +13,8 @@ void System_Init(Engine* engine)
 
 void System_Update(Engine* engine)
 {
+	Input_SDL_JoysticksResetState();
+
 	// Window events //
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -38,10 +40,20 @@ void System_Update(Engine* engine)
 		case SDL_JOYDEVICEREMOVED:
 			Input_SDL_Event_JoyDeviceRemoved(&event);
 			break;
+		case SDL_JOYBUTTONDOWN:
+			Input_SDL_Event_JoyButtonDown(&event);
+			break;
+		case SDL_JOYBUTTONUP:
+			Input_SDL_Event_JoyButtonUp(&event);
+			break;
+		case SDL_JOYHATMOTION:
+			Input_SDL_Event_JoyHatMotion(&event);
+			break;
+		case SDL_JOYAXISMOTION:
+			Input_SDL_Event_JoyAxisMotion(&event);
+			break;
 		}
 	}
-
-	Input_SDL_JoysticksUpdateState();
 }
 
 void System_Quit(Engine* engine)

@@ -307,6 +307,7 @@ struct JoystickHandler
 	ControllerInfo info;
 };
 
+thread_local size_t _joystickLastWhichIndex = 0;
 LightVector<JoystickHandler> _joysticks;
 LightVector<ControllerState> _joysticksState;
 
@@ -365,6 +366,12 @@ void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event)
 		{
 			_controller_callbacks.added(_controller_callbacks.data, &handler.info);
 		}
+
+		ControllerState& state = _joysticksState[joyId];
+		state.HatState = ControllerState::Hat_Centered;
+		state.ButtonMaskState = 0;
+		state.ButtonMaskUp = 0;
+		state.ButtonMaskDown = 0;
 	}
 }
 
@@ -391,13 +398,76 @@ void Input_SDL_Event_JoyDeviceRemoved(SDL_Event* event)
 	{
 		_controller_callbacks.removed(_controller_callbacks.data, &handler.info);
 	}
+
+	//Pre: _joystickLastWhichIndex is always valid
+	_joystickLastWhichIndex = 0;
 }
 
-void Input_SDL_JoysticksUpdateState()
+//Pre: _joystickLastWhichIndex is always valid and which always exists
+inline size_t Input_SDL_FindWhich(SDL_JoystickID which)
+{
+	size_t joyIndex = _joystickLastWhichIndex;
+	if (_joysticks[joyIndex].instanceId != which)
+	{
+		for (joyIndex = 0; joyIndex < _joysticks.size() && _joysticks[joyIndex].instanceId != which; joyIndex++);
+		SYS_ASSERT(joyIndex != _joysticks.size());
+		_joystickLastWhichIndex = joyIndex;
+	}
+
+	return joyIndex;
+}
+
+void Input_SDL_Event_JoyButtonDown(SDL_Event* event)
+{
+	size_t joyIndex = Input_SDL_FindWhich(event->jbutton.which);
+	uint32_t mask = (1 << event->jbutton.button);
+	_joysticksState[joyIndex].ButtonMaskDown |= mask;
+	_joysticksState[joyIndex].ButtonMaskState |= mask;
+}
+
+void Input_SDL_Event_JoyButtonUp(SDL_Event* event)
+{
+	size_t joyIndex = Input_SDL_FindWhich(event->jbutton.which);
+	uint32_t mask = (1 << event->jbutton.button);
+	_joysticksState[joyIndex].ButtonMaskUp |= mask;
+	_joysticksState[joyIndex].ButtonMaskState &= ~mask;
+}
+
+uint8_t SDL_HAT_LOOK_UP[] =
+{
+	ControllerState::Hat_Centered, // SDL_HAT_CENTERED    0x00 0000
+	ControllerState::Hat_Up,       // SDL_HAT_UP          0x01 0001
+	ControllerState::Hat_Right,    // SDL_HAT_RIGHT       0x02 0010
+	ControllerState::Hat_RightUp,  // SDL_HAT_RIGHTUP     0x03 0011
+	ControllerState::Hat_Down,     // SDL_HAT_DOWN        0x04 0100
+	ControllerState::Hat_Centered, // NOT_USED            0x05 0101
+	ControllerState::Hat_RightDown,// SDL_HAT_RIGHTDOWN   0x06 0110
+	ControllerState::Hat_Centered, // NOT_USED            0x07 0111
+	ControllerState::Hat_Left,     // SDL_HAT_LEFT        0x08 1000
+	ControllerState::Hat_LeftUp,   // SDL_HAT_LEFTUP      0x09 1001
+	ControllerState::Hat_Centered, // NOT_USED            0x0A 1010
+	ControllerState::Hat_Centered, // NOT_USED            0x0B 1011
+	ControllerState::Hat_LeftDown, // SDL_HAT_LEFTDOWN    0x0C 1100
+	ControllerState::Hat_Centered, // NOT_USED            0x0D 1101
+	ControllerState::Hat_Centered, // NOT_USED            0x0E 1110
+	ControllerState::Hat_Centered, // NOT_USED            0x0F 1111
+};
+
+void Input_SDL_Event_JoyHatMotion(SDL_Event* event)
+{
+	size_t joyIndex = Input_SDL_FindWhich(event->jhat.which);
+	_joysticksState[joyIndex].HatState = SDL_HAT_LOOK_UP[event->jhat.value];
+}
+
+void Input_SDL_Event_JoyAxisMotion(SDL_Event* event)
+{
+}
+
+void Input_SDL_JoysticksResetState()
 {
 	for (size_t i = 0; i < _joysticks.size(); i++)
 	{
-		JoystickHandler& handler = _joysticks[i];
+		/*JoystickHandler& handler = _joysticks[i];
 		uint32_t butMask = 0;
 		if (handler.joy != nullptr)
 		{
@@ -406,13 +476,15 @@ void Input_SDL_JoysticksUpdateState()
 			{
 				butMask |= SDL_JoystickGetButton(handler.joy, butInd) << butInd;
 			}
-		}
+		}*/
 
-		_joysticksState[i].ButtonMask = butMask;
+		//_joysticksState[i].ButtonMaskState = butMask;
+		_joysticksState[i].ButtonMaskUp = 0;
+		_joysticksState[i].ButtonMaskDown = 0;
 	}
 }
 
-const ControllerState * Input_GetControllerState(uint16_t Id)
+const ControllerState* Input_GetControllerState(uint16_t Id)
 {
 	SYS_ASSERT(Id <= _joysticksState.size());
 	return &_joysticksState[Id];

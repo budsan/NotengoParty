@@ -5,6 +5,26 @@
 
 static char _textBuffer[128];
 
+const char* HatStateName[] =
+{
+		"CENTERED",
+		"RIGHT",
+		"LEFT",
+		"0011 CENTERED",
+		"UP",
+		"LEFTUP",
+		"RIGHTUP",
+		"0111 UP",
+		"DOWN",
+		"LEFTDOWN",
+		"RIGHTDOWN",
+		"1011 DOWN",
+		"1100 CENTERED",
+		"1101 LEFT",
+		"1110 RIGHT",
+		"1111 CENTERED"
+};
+
 void Game_ControllerAdded(void* inst, const ControllerInfo* info)
 {
 	Game* game = reinterpret_cast<Game*>(inst);
@@ -71,18 +91,19 @@ void Game::Update(Engine* engine)
 
 	for (size_t i = 0; i < _lastJoystickId; i++)
 	{
-		ImVec2 fontPos(20, i * 2 * (10 + _fontSize ) +  20);
+		ImVec2 fontPos(20, i * 3 * (10 + _fontSize ) +  20);
 		const ControllerInfo* info = Input_GetControllerInfo(i);
 		const ControllerState* state = Input_GetControllerState(i);
 
 		if (info != nullptr)
 		{
-			sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d.\n%s", 
+			sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d.\n%s\n%s", 
 				info->Name, 
 				info->Id, 
 				info->NumButtons,
 				info->numAxes,
-				int_to_binary(state->ButtonMask));
+				int_to_binary(state->ButtonMaskState),
+				HatStateName[state->HatState]);
 
 			_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
 		}

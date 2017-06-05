@@ -28,4 +28,9 @@ typedef GLuint Texture2D_SDLImpl;
 
 void Input_SDL_Event_JoyDeviceAdded(SDL_Event* event);
 void Input_SDL_Event_JoyDeviceRemoved(SDL_Event* event);
-void Input_SDL_JoysticksUpdateState();
+void Input_SDL_Event_JoyButtonDown(SDL_Event* event);
+void Input_SDL_Event_JoyButtonUp(SDL_Event* event);
+void Input_SDL_Event_JoyHatMotion(SDL_Event* event);
+void Input_SDL_Event_JoyAxisMotion(SDL_Event* event);
+
+void Input_SDL_JoysticksResetState();
