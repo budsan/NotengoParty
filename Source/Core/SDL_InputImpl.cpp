@@ -420,7 +420,7 @@ inline size_t Input_SDL_FindWhich(SDL_JoystickID which)
 void Input_SDL_Event_JoyButtonDown(SDL_Event* event)
 {
 	size_t joyIndex = Input_SDL_FindWhich(event->jbutton.which);
-	uint32_t mask = (1 << event->jbutton.button);
+	ControllerState::ButtonMaskType mask = (1 << event->jbutton.button);
 	_joysticksState[joyIndex].ButtonMaskDown |= mask;
 	_joysticksState[joyIndex].ButtonMaskState |= mask;
 }
@@ -428,12 +428,12 @@ void Input_SDL_Event_JoyButtonDown(SDL_Event* event)
 void Input_SDL_Event_JoyButtonUp(SDL_Event* event)
 {
 	size_t joyIndex = Input_SDL_FindWhich(event->jbutton.which);
-	uint32_t mask = (1 << event->jbutton.button);
+	ControllerState::ButtonMaskType mask = (1 << event->jbutton.button);
 	_joysticksState[joyIndex].ButtonMaskUp |= mask;
 	_joysticksState[joyIndex].ButtonMaskState &= ~mask;
 }
 
-uint8_t SDL_HAT_LOOK_UP[] =
+ControllerState::HatType SDL_HAT_LOOK_UP[] =
 {
 	ControllerState::Hat_Centered, // SDL_HAT_CENTERED    0x00 0000
 	ControllerState::Hat_Up,       // SDL_HAT_UP          0x01 0001
@@ -461,24 +461,16 @@ void Input_SDL_Event_JoyHatMotion(SDL_Event* event)
 
 void Input_SDL_Event_JoyAxisMotion(SDL_Event* event)
 {
+	ControllerState::AxisType dummy;
+	size_t joyIndex = Input_SDL_FindWhich(event->jaxis.which);
+	int16_t* axis = event->jaxis.axis < ControllerState::Axis_Max ? &_joysticksState[joyIndex].AxisState[event->jaxis.axis] : &dummy;
+	*axis = event->jaxis.value;
 }
 
 void Input_SDL_JoysticksResetState()
 {
 	for (size_t i = 0; i < _joysticks.size(); i++)
 	{
-		/*JoystickHandler& handler = _joysticks[i];
-		uint32_t butMask = 0;
-		if (handler.joy != nullptr)
-		{
-			SYS_ASSERT(handler.info.NumButtons <= (sizeof(butMask) * 8));
-			for (size_t butInd = 0; butInd < handler.info.NumButtons; butInd++)
-			{
-				butMask |= SDL_JoystickGetButton(handler.joy, butInd) << butInd;
-			}
-		}*/
-
-		//_joysticksState[i].ButtonMaskState = butMask;
 		_joysticksState[i].ButtonMaskUp = 0;
 		_joysticksState[i].ButtonMaskDown = 0;
 	}

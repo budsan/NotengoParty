@@ -12,12 +12,12 @@ const char* HatStateName[] =
 		"LEFT",
 		"0011 CENTERED",
 		"UP",
-		"LEFTUP",
 		"RIGHTUP",
+		"LEFTUP",
 		"0111 UP",
 		"DOWN",
-		"LEFTDOWN",
 		"RIGHTDOWN",
+		"LEFTDOWN",
 		"1011 DOWN",
 		"1100 CENTERED",
 		"1101 LEFT",
@@ -103,7 +103,7 @@ void Game::Update(Engine* engine)
 				info->NumButtons,
 				info->numAxes,
 				int_to_binary(state->ButtonMaskState),
-				HatStateName[state->HatState]);
+				HatStateName[state->HatState | state->AxisToHat()]);
 
 			_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
 		}
