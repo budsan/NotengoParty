@@ -210,26 +210,6 @@ struct ControllerState
 	};
 
 	AxisType AxisState[Axis_Max];
-
-	//-- AXIS HELPERS -------------------------------------------------------//
-
-	HatType AxisToHat(AxisType x, AxisType y)
-	{
-		const AxisType threshold = 16383;
-
-		HatType mask = 0;
-		mask |= (x >  threshold) ? 1 << 0 : 0;
-		mask |= (x < -threshold) ? 1 << 1 : 0;
-		mask |= (y < -threshold) ? 1 << 2 : 0;
-		mask |= (y >  threshold) ? 1 << 3 : 0;
-
-		return mask;
-	}
-
-	HatType AxisToHat()
-	{
-		return AxisToHat(AxisState[0], AxisState[1]);
-	}
 };
 
 const ControllerState* Input_GetControllerState(uint16_t Id);

@@ -25,6 +25,24 @@ const char* HatStateName[] =
 		"1111 CENTERED"
 };
 
+inline ControllerState::HatType AxisToHat(ControllerState::AxisType x, ControllerState::AxisType y)
+{
+	const ControllerState::AxisType threshold = 1 << (sizeof(ControllerState::AxisType) * 7);
+
+	ControllerState::HatType mask = 0;
+	mask |= (x >  threshold) ? 1 << 0 : 0;
+	mask |= (x < -threshold) ? 1 << 1 : 0;
+	mask |= (y < -threshold) ? 1 << 2 : 0;
+	mask |= (y >  threshold) ? 1 << 3 : 0;
+
+	return mask;
+}
+
+inline ControllerState::HatType AxisToHat(const ControllerState* state)
+{
+	return AxisToHat(state->AxisState[0], state->AxisState[1]);
+}
+
 void Game_ControllerAdded(void* inst, const ControllerInfo* info)
 {
 	Game* game = reinterpret_cast<Game*>(inst);
@@ -103,7 +121,7 @@ void Game::Update(Engine* engine)
 				info->NumButtons,
 				info->numAxes,
 				int_to_binary(state->ButtonMaskState),
-				HatStateName[state->HatState | state->AxisToHat()]);
+				HatStateName[state->HatState | AxisToHat(state)]);
 
 			_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
 		}

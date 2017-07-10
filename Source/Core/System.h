@@ -38,3 +38,26 @@ void System_Sleep(uint32_t ticks);
 
 const char* System_GetClipboardText();
 bool System_SetClipboardText(const char *text);
+
+typedef void* ThreadType;
+typedef int(*ThreadFunction)(void* data);
+
+ThreadType Thread_Create(ThreadFunction func, const char* name, void* data);
+void Thread_Wait(ThreadType thread, int* result);
+
+typedef void* MutexType;
+
+MutexType Mutex_Create();
+void Mutex_Destroy(MutexType mutex);
+
+enum
+{
+	Mutex_Error = -1,
+	Mutex_Ok = 0,
+	Mutex_TimeOut = 1
+};
+
+int Mutex_Lock(MutexType mutex);
+int Mutex_Unlock(MutexType mutex);
+int Mutex_TryLock(MutexType mutex);
+

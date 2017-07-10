@@ -95,4 +95,44 @@ void SysFree(void* ptr)
 	debug_allocations--;
 }
 
+ThreadType Thread_Create(ThreadFunction func, const char* name, void* data)
+{
+	SDL_Thread *thread = SDL_CreateThread(func, name, data);
+	return (ThreadType) thread;
+}
+
+void Thread_Wait(ThreadType thread, int* result)
+{
+	SDL_Thread *thread_impl = (SDL_Thread*)thread;
+	SDL_WaitThread(thread_impl, result);
+}
+
+MutexType Mutex_Create()
+{
+	return (MutexType) SDL_CreateMutex();
+}
+void Mutex_Destroy(MutexType mutex)
+{
+	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
+	SDL_DestroyMutex(mutex_impl);
+}
+
+int Mutex_Lock(MutexType mutex)
+{
+	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
+	return SDL_LockMutex(mutex_impl);
+}
+
+int Mutex_Unlock(MutexType mutex)
+{
+	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
+	return SDL_UnlockMutex(mutex_impl);
+}
+
+int Mutex_TryLock(MutexType mutex)
+{
+	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
+	return SDL_TryLockMutex(mutex_impl);
+}
+
 #endif
