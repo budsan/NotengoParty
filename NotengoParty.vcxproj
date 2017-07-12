@@ -146,6 +146,7 @@
     <ClCompile Include="Source\Core\imgui\imgui_draw.cpp" />
     <ClCompile Include="Source\Core\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="Source\Core\imgui_impl_core.cpp" />
+    <ClCompile Include="Source\Core\SDL_FileImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_InputImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_RendererImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_SystemImpl.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Engine.h" />
+    <ClInclude Include="Source\Core\File.h" />
     <ClInclude Include="Source\Core\imgui\imconfig.h" />
     <ClInclude Include="Source\Core\imgui\imgui.h" />
     <ClInclude Include="Source\Core\imgui\imgui_impl_sdl.h" />

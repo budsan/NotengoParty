@@ -73,22 +73,16 @@ const char *int_to_binary(uint32_t x)
 
 void Game::Init(Engine* engine)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	io.MemAllocFn = SysMalloc;
+	io.MemFreeFn = SysFree;
+
 	_fontSize = 32;
 	_fontDrawList = (ImDrawList*)SysMalloc(sizeof(ImDrawList));
 	SYS_PLACEMENT_NEW(_fontDrawList) ImDrawList();
-	_font = _fontAtlas.AddFontFromFileTTF("Data/Fonts/ArvinRegular.ttf", _fontSize);
 
-	unsigned char* pixels;
-	int width, height;
-	_fontAtlas.GetTexDataAsAlpha8(&pixels, &width, &height);
-	{
-		Texture2D_Description desc;
-		desc.width = width;
-		desc.height = height;
-		desc.format = TextureFormatA8;
-
-		_fontAtlas.TexID = Texture2D_Create(engine, &desc, pixels);
-	}
+	File_LoadToMemoryAsync("Data/Fonts/ArvinRegular.ttf", &_readAsync);
+	_allLoaded = false;
 
 	Input_ControllerCallbacks _controllerCallback =
 	{
@@ -103,45 +97,72 @@ void Game::Init(Engine* engine)
 
 void Game::Update(Engine* engine)
 {
-	_fontDrawList->Clear();
-	_fontDrawList->PushClipRectFullScreen();
-	_fontDrawList->PushTextureID(_fontAtlas.TexID);
-
-	for (size_t i = 0; i < _lastJoystickId; i++)
+	if (_allLoaded)
 	{
-		ImVec2 fontPos(20, i * 3 * (10 + _fontSize ) +  20);
-		const ControllerInfo* info = Input_GetControllerInfo(i);
-		const ControllerState* state = Input_GetControllerState(i);
+		_fontDrawList->Clear();
+		_fontDrawList->PushClipRectFullScreen();
+		_fontDrawList->PushTextureID(_fontAtlas.TexID);
 
-		if (info != nullptr)
+		for (size_t i = 0; i < _lastJoystickId; i++)
 		{
-			sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d.\n%s\n%s", 
-				info->Name, 
-				info->Id, 
-				info->NumButtons,
-				info->numAxes,
-				int_to_binary(state->ButtonMaskState),
-				HatStateName[state->HatState | AxisToHat(state)]);
+			ImVec2 fontPos(20, i * 3 * (10 + _fontSize) + 20);
+			const ControllerInfo* info = Input_GetControllerInfo(i);
+			const ControllerState* state = Input_GetControllerState(i);
 
-			_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
+			if (info != nullptr)
+			{
+				sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d.\n%s\n%s",
+					info->Name,
+					info->Id,
+					info->NumButtons,
+					info->numAxes,
+					int_to_binary(state->ButtonMaskState),
+					HatStateName[state->HatState | AxisToHat(state)]);
+
+				_fontDrawList->AddText(_font, _fontSize, fontPos, 0xFFFFFFFF, _textBuffer, NULL, 0);
+			}
+		}
+
+		Renderer_ImGui_NewFrame(engine);
+	}
+	else
+	{
+		if (_readAsync.completed)
+		{
+			_font = _fontAtlas.AddFontFromMemoryTTF(_readAsync.data, _readAsync.size, _fontSize);
+
+			unsigned char* pixels;
+			int width, height;
+			_fontAtlas.GetTexDataAsAlpha8(&pixels, &width, &height);
+			{
+				Texture2D_Description desc;
+				desc.width = width;
+				desc.height = height;
+				desc.format = TextureFormatA8;
+
+				_fontAtlas.TexID = Texture2D_Create(engine, &desc, pixels);
+			}
+
+			_allLoaded = true;
 		}
 	}
-	
-	Renderer_ImGui_NewFrame(engine);
 }
 
 void Game::Render(Engine* engine)
 {
 	Renderer_Clear(engine, 0, 0, 0, 255);
 
-	ImDrawData RenderDrawData;
-	RenderDrawData.CmdLists = &_fontDrawList;
-	RenderDrawData.CmdListsCount = _fontDrawList->VtxBuffer.size() > 0 ? 1 : 0;
-	RenderDrawData.TotalVtxCount = _fontDrawList->VtxBuffer.size();
-	RenderDrawData.TotalIdxCount = _fontDrawList->IdxBuffer.size();
+	if (_allLoaded)
+	{
+		ImDrawData RenderDrawData;
+		RenderDrawData.CmdLists = &_fontDrawList;
+		RenderDrawData.CmdListsCount = _fontDrawList->VtxBuffer.size() > 0 ? 1 : 0;
+		RenderDrawData.TotalVtxCount = _fontDrawList->VtxBuffer.size();
+		RenderDrawData.TotalIdxCount = _fontDrawList->IdxBuffer.size();
 
-	ImGuiIO& io = ImGui::GetIO();
-	io.RenderDrawListsFn(&RenderDrawData);
+		ImGuiIO& io = ImGui::GetIO();
+		io.RenderDrawListsFn(&RenderDrawData);
+	}
 
 	Renderer_Present(engine);
 }

@@ -61,3 +61,29 @@ int Mutex_Lock(MutexType mutex);
 int Mutex_Unlock(MutexType mutex);
 int Mutex_TryLock(MutexType mutex);
 
+struct LockGuard
+{
+	MutexType mutex;
+	LockGuard(MutexType mutex) : mutex(mutex) { Mutex_Lock(mutex); }
+	~LockGuard() { Mutex_Unlock(mutex); }
+};
+
+typedef void* CondVarType;
+
+CondVarType CondVar_Create();
+void CondVar_Destroy(CondVarType condvar);
+
+enum
+{
+	CondVar_Error = -1,
+	CondVar_Ok = 0,
+	CondVar_TimeOut = 1
+};
+
+int CondVar_SignalOne(CondVarType condvar);
+int CondVar_SignalAll(CondVarType condvar);
+
+int CondVar_Wait(CondVarType condvar, MutexType mutex);
+int Condvar_WaitFor(CondVarType condvar, MutexType mutex, uint32_t ticks);
+
+

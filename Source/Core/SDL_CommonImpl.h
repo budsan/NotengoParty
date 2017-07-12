@@ -34,3 +34,6 @@ void Input_SDL_Event_JoyHatMotion(SDL_Event* event);
 void Input_SDL_Event_JoyAxisMotion(SDL_Event* event);
 
 void Input_SDL_JoysticksResetState();
+
+void IOThread_Init();
+void IOThread_Destroy();

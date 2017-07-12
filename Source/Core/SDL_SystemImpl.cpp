@@ -9,6 +9,7 @@ size_t debug_allocations = 0;
 void System_Init(Engine* engine)
 {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
+	IOThread_Init();
 }
 
 void System_Update(Engine* engine)
@@ -58,6 +59,7 @@ void System_Update(Engine* engine)
 
 void System_Quit(Engine* engine)
 {
+	IOThread_Destroy();
 	SDL_Quit();
 
 	SYS_ASSERT(debug_allocations == 0);
@@ -120,19 +122,60 @@ void Mutex_Destroy(MutexType mutex)
 int Mutex_Lock(MutexType mutex)
 {
 	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
-	return SDL_LockMutex(mutex_impl);
+	return SDL_LockMutex(mutex_impl) < 0 ? Mutex_Error : Mutex_Ok;
 }
 
 int Mutex_Unlock(MutexType mutex)
 {
 	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
-	return SDL_UnlockMutex(mutex_impl);
+	return SDL_UnlockMutex(mutex_impl) < 0 ? Mutex_Error : Mutex_Ok;
 }
 
 int Mutex_TryLock(MutexType mutex)
 {
 	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
-	return SDL_TryLockMutex(mutex_impl);
+	int result = SDL_TryLockMutex(mutex_impl);
+	return result < 0 ? Mutex_Error : result;
+}
+
+CondVarType CondVar_Create()
+{
+	SDL_cond* cond_impl = SDL_CreateCond();
+	return (CondVarType) cond_impl;
+}
+
+void CondVar_Destroy(CondVarType condvar)
+{
+	SDL_cond* cond_impl = (SDL_cond*) condvar;
+	SDL_DestroyCond(cond_impl);
+}
+
+int CondVar_SignalOne(CondVarType condvar)
+{
+	SDL_cond* cond_impl = (SDL_cond*)condvar;
+	return SDL_CondSignal(cond_impl) < 0 ? CondVar_Error : CondVar_Ok;
+}
+
+int CondVar_SignalAll(CondVarType condvar)
+{
+	SDL_cond* cond_impl = (SDL_cond*)condvar;
+	return SDL_CondBroadcast(cond_impl) < 0 ? CondVar_Error : CondVar_Ok;
+}
+
+int CondVar_Wait(CondVarType condvar, MutexType mutex)
+{
+	SDL_cond* cond_impl = (SDL_cond*)condvar;
+	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
+	return SDL_CondWait(cond_impl, mutex_impl) < 0 ? CondVar_Error : CondVar_Ok;
+}
+
+int Condvar_WaitFor(CondVarType condvar, MutexType mutex, uint32_t ticks)
+{
+	SDL_cond* cond_impl = (SDL_cond*)condvar;
+	SDL_mutex* mutex_impl = (SDL_mutex*)mutex;
+
+	int result = SDL_CondWaitTimeout(cond_impl, mutex_impl, ticks);
+	return result < 0 ? CondVar_Error : result;
 }
 
 #endif
