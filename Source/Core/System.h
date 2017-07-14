@@ -1,4 +1,5 @@
 #pragma once
+#define ALLOC_COUNT
 
 #include <stdio.h>
 
@@ -11,6 +12,20 @@ void System_Quit(Engine* engine);
 void* SysMalloc(size_t size);
 void SysFree(void* ptr);
 
+#ifdef ALLOC_COUNT
+
+#define SYS_DEBUG_INCR_ALLOC _SysDebugIncrMalloc()
+#define SYS_DEBUG_DECR_ALLOC _sysDebugDecrMalloc()
+
+void _SysDebugIncrMalloc();
+void _sysDebugDecrMalloc();
+
+#else
+
+#define SYS_DEBUG_INCR_MALLOC
+#define SYS_DEBUG_DECR_MALLOC
+
+#endif
 
 #define SYS_LOG(...) printf(__VA_ARGS__)
 

@@ -4,7 +4,21 @@
 #include "System.h"
 #include "SDL_CommonImpl.h"
 
+#ifdef ALLOC_COUNT
+
 size_t debug_allocations = 0;
+
+void _SysDebugIncrMalloc()
+{
+	debug_allocations++;
+}
+
+void _sysDebugDecrMalloc()
+{
+	debug_allocations--;
+}
+
+#endif
 
 void System_Init(Engine* engine)
 {
@@ -62,7 +76,9 @@ void System_Quit(Engine* engine)
 	IOThread_Destroy();
 	SDL_Quit();
 
+#ifdef ALLOC_COUNT
 	SYS_ASSERT(debug_allocations == 0);
+#endif
 }
 
 uint32_t System_Ticks()
@@ -87,14 +103,14 @@ bool System_SetClipboardText(const char *text)
 
 void* SysMalloc(size_t size)
 {
-	debug_allocations++;
+	SYS_DEBUG_INCR_ALLOC;
 	return malloc(size);
 }
 
 void SysFree(void* ptr)
 {
 	free(ptr);
-	debug_allocations--;
+	SYS_DEBUG_DECR_ALLOC;
 }
 
 ThreadType Thread_Create(ThreadFunction func, const char* name, void* data)
