@@ -57,6 +57,12 @@
     <ClCompile Include="Source\Core\SDL_FileImpl.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\InputAux.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\System.h">
@@ -118,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="Source\Core\File.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\InputAux.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

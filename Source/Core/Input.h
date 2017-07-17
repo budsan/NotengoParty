@@ -1,5 +1,7 @@
 #pragma once
 
+#include "System.h"
+
 #define INPUT_DISABLE 0
 #define INPUT_ENABLE 1
 
