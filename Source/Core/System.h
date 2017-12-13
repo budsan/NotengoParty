@@ -10,6 +10,7 @@ void System_Update(Engine* engine);
 void System_Quit(Engine* engine);
 
 void* SysMalloc(size_t size);
+void* SysRealloc(void* ptr, size_t size);
 void SysFree(void* ptr);
 
 #ifdef ALLOC_COUNT

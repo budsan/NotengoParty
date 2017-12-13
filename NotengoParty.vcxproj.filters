@@ -63,6 +63,9 @@
     <ClCompile Include="Source\UI.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Jobs.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\System.h">
@@ -129,6 +132,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stb_image.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

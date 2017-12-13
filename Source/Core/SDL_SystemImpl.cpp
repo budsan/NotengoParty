@@ -107,6 +107,12 @@ void* SysMalloc(size_t size)
 	return malloc(size);
 }
 
+void* SysRealloc(void* ptr, size_t size)
+{
+	SYS_DEBUG_INCR_ALLOC;
+	return realloc(ptr, size);
+}
+
 void SysFree(void* ptr)
 {
 	free(ptr);

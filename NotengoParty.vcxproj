@@ -154,6 +154,7 @@
     <ClCompile Include="Source\Core\SDL_WindowImpl.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\InputAux.cpp" />
+    <ClCompile Include="Source\Jobs.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\UI.cpp" />
   </ItemGroup>
@@ -179,6 +180,7 @@
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\InputAux.h" />
+    <ClInclude Include="Source\stb_image.h" />
     <ClInclude Include="Source\UI.h" />
   </ItemGroup>
   <ItemGroup>
