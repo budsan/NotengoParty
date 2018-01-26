@@ -3,15 +3,14 @@
 #include "Core/Engine.h"
 #include "Core/File.h"
 
+#include "DebugController.h"
+
 struct Game
 {
-	ImFontAtlas _fontAtlas;
-	ImFont* _font;
-	ImDrawList* _fontDrawList;
-	float _fontSize;
-	size_t _lastJoystickId;
-	FileReadAsync _readAsync;
-	bool _allLoaded;
+	DebugController _debugController;
+
+	ImDrawList* _gameDrawList;
+	ImDrawList* _cmdLists[2];
 
 	void Init(Engine* engine);
 	void Update(Engine* engine);

@@ -152,6 +152,7 @@
     <ClCompile Include="Source\Core\SDL_SystemImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_TextureImpl.cpp" />
     <ClCompile Include="Source\Core\SDL_WindowImpl.cpp" />
+    <ClCompile Include="Source\DebugController.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Image.cpp" />
     <ClCompile Include="Source\InputAux.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Source\Core\System.h" />
     <ClInclude Include="Source\Core\Texture.h" />
     <ClInclude Include="Source\Core\Window.h" />
+    <ClInclude Include="Source\DebugController.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Image.h" />
     <ClInclude Include="Source\InputAux.h" />
