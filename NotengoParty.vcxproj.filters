@@ -66,7 +66,10 @@
     <ClCompile Include="Source\Image.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DebugController.cpp">
+    <ClCompile Include="Source\System_DebugController.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System_Manager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,7 +146,13 @@
     <ClInclude Include="Source\Image.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DebugController.h">
+    <ClInclude Include="Source\System.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System_DebugController.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System_Manager.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

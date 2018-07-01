@@ -1,4 +1,4 @@
-#include "DebugController.h"
+#include "System_DebugController.h"
 #include "InputAux.h"
 #include "UI.h"
 
@@ -10,7 +10,7 @@ static char _textBuffer[128];
 
 void Game_ControllerAdded(void* inst, const ControllerInfo* info)
 {
-	DebugController* debugController = reinterpret_cast<DebugController*>(inst);
+	System_DebugController* debugController = reinterpret_cast<System_DebugController*>(inst);
 	debugController->_lastJoystickId = debugController->_lastJoystickId <= info->Id ? info->Id + 1 : debugController->_lastJoystickId;
 
 	/*sprintf_s(_textBuffer, sizeof(_textBuffer), "%s. id %d. b %d. a %d. tb %d", info->Name, info->Id, info->NumButtons, info->NumButtons, info->numAxes, info->NumTrackballs);
@@ -38,7 +38,7 @@ const char *int_to_binary(uint32_t x)
 
 //---------------------------------------------------------------------------//
 
-void DebugController::Init(Engine* engine)
+void System_DebugController::Init(Engine* engine)
 {
 	_fontSize = 32;
 	_fontDrawList = (ImDrawList*)SysMalloc(sizeof(ImDrawList));
@@ -58,7 +58,7 @@ void DebugController::Init(Engine* engine)
 	_lastJoystickId = 0;
 }
 
-void DebugController::Update(Engine* engine)
+void System_DebugController::DoJob(Engine* engine)
 {
 	_fontDrawList->Clear();
 
@@ -119,7 +119,7 @@ void DebugController::Update(Engine* engine)
 	}
 }
 
-void DebugController::Quit(Engine* engine)
+void System_DebugController::Quit(Engine* engine)
 {
 	Texture2D_Destroy(engine, _fontAtlas.TexID);
 	SysFree(_fontDrawList);

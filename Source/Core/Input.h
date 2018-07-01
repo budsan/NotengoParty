@@ -164,6 +164,7 @@ struct Input_ControllerCallbacks
 };
 
 void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks);
+uint16_t Input_GetControllerInfoCount();
 const ControllerInfo* Input_GetControllerInfo(uint16_t Id);
 
 struct ControllerState

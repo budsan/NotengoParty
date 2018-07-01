@@ -33,6 +33,12 @@ public:
 	{
 		_offset = 0;
 	}
+
+	T& operator [] (size_t index)
+	{
+		T* ptr = operator->();
+		return ptr[index];
+	}
 };
 
 template <typename T> using RPtr8  = RPtr<uint8_t , T>;
@@ -55,6 +61,11 @@ public:
 	inline T* Alloc(size_t align = alignof(T))
 	{
 		return reinterpret_cast<T*>(Alloc(sizeof(T), align));
+	}
+
+	void* HeapPtr()
+	{
+		return heap;
 	}
 
 	void* Alloc(size_t s, size_t align)

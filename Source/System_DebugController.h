@@ -3,7 +3,9 @@
 #include "Core/Engine.h"
 #include "Core/File.h"
 
-struct DebugController
+#include "System.h"
+
+struct System_DebugController : public System
 {
 	ImFontAtlas _fontAtlas;
 	ImFont* _font;
@@ -13,8 +15,10 @@ struct DebugController
 	FileReadAsync _readAsync;
 	bool _allLoaded;
 
+	System_DebugController() : System(SystemPriority_DebugControler) {}
+
 	ImDrawList* GetDrawList() { return _fontDrawList; }
 	void Init(Engine* engine);
-	void Update(Engine* engine);
+	void DoJob(Engine* engine);
 	void Quit(Engine* engine);
 };

@@ -6,17 +6,20 @@
 #include "Core/Texture.h"
 #include "Core/imgui/imgui_impl_sdl.h"
 
-
 void Game::Init(Engine* engine)
 {
-	_debugController.Init(engine);
+	_systemManager.Init(engine);
+
+	_systemDebugController.flags |= SystemFlags_InitMe;
+	_systemManager.AddSystem(&_systemDebugController);
+
 	_gameDrawList = (ImDrawList*)SysMalloc(sizeof(ImDrawList));
 	SYS_PLACEMENT_NEW(_gameDrawList) ImDrawList();
 }
 
 void Game::Update(Engine* engine)
 {
-	_debugController.Update(engine);
+	_systemManager.DoJob(engine);
 
 	_gameDrawList->Clear();
 	_gameDrawList->PushClipRectFullScreen();
@@ -29,7 +32,7 @@ void Game::Render(Engine* engine)
 {
 	Renderer_Clear(engine, 0, 0, 0, 255);
 
-	ImDrawList* debugControllerDrawList = _debugController.GetDrawList();
+	ImDrawList* debugControllerDrawList = _systemDebugController.GetDrawList();
 
 	int CmdListsCount = 0;
 	if (debugControllerDrawList->VtxBuffer.size() > 0)
@@ -58,9 +61,6 @@ void Game::Render(Engine* engine)
 
 void Game::Quit(Engine* engine)
 {
-	_debugController.Quit(engine);
+	_systemDebugController.Quit(engine);
 	SysFree(_gameDrawList);
 }
-
-
-

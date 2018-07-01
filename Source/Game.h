@@ -3,11 +3,14 @@
 #include "Core/Engine.h"
 #include "Core/File.h"
 
-#include "DebugController.h"
+#include "System.h"
+#include "System_Manager.h"
+#include "System_DebugController.h"
 
 struct Game
 {
-	DebugController _debugController;
+	System_Manager _systemManager;
+	System_DebugController _systemDebugController;	
 
 	ImDrawList* _gameDrawList;
 	ImDrawList* _cmdLists[2];

@@ -316,6 +316,11 @@ void Input_SetControllerCallbacks(Input_ControllerCallbacks callbacks)
 	_controller_callbacks = callbacks;
 }
 
+uint16_t Input_GetControllerInfoCount()
+{
+	return (uint16_t) _joysticks.size();
+}
+
 const ControllerInfo* Input_GetControllerInfo(uint16_t Id)
 {
 	return (_joysticks.size() > Id && _joysticks[Id].joy != nullptr) ? &_joysticks[Id].info : nullptr;
