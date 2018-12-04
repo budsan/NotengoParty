@@ -28,8 +28,6 @@ void _sysDebugDecrMalloc();
 
 #endif
 
-#define SYS_LOG(...) printf(__VA_ARGS__)
-
 #if defined(SDL_IMPL)
 
 #define SDL_MAIN_HANDLED
@@ -37,12 +35,20 @@ void _sysDebugDecrMalloc();
 #include <SDL.h>
 #include "imgui/imgui.h"
 
+#define SYS_LOG(...) printf(__VA_ARGS__)
 #define SYS_ASSERT(...) SDL_assert(__VA_ARGS__)
+#elif defined(DX11_IMPL)
+
+#include <stdint.h>
+#include "imgui/imgui.h"
+
+#define SYS_LOG(...) printf(__VA_ARGS__)
+#define SYS_ASSERT(...) assert(__VA_ARGS__)
 #else
 #error "Not defined platform"
 #endif
 
-#define SYS_TICKS_PASSED(A, B)  ((Sint32)((B) - (A)) <= 0)
+#define SYS_TICKS_PASSED(A, B)  ((int32_t)((B) - (A)) <= 0)
 
 struct ImPlacementNewDummy {};
 inline void* operator new(size_t, ImPlacementNewDummy, void* ptr){ return ptr; }

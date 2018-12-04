@@ -69,31 +69,36 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>Libs\SDL2-2.0.5\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>Libs\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>Libs\SDL2-2.0.5\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>Libs\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>Libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>Libs\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>Libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>Libs\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SDL_IMPL;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DX11_IMPL;_CRT_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -101,11 +106,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SDL_IMPL;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DX11_IMPL;_CRT_SECURE_NO_WARNINGS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,13 +121,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SDL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DX11_IMPL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,27 +138,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SDL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DX11_IMPL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Core\Engine.cpp" />
-    <ClCompile Include="Source\Core\imgui\imgui.cpp" />
-    <ClCompile Include="Source\Core\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Source\Core\imgui\imgui_impl_sdl.cpp" />
-    <ClCompile Include="Source\Core\imgui_impl_core.cpp" />
-    <ClCompile Include="Source\Core\SDL_FileImpl.cpp" />
-    <ClCompile Include="Source\Core\SDL_InputImpl.cpp" />
-    <ClCompile Include="Source\Core\SDL_RendererImpl.cpp" />
-    <ClCompile Include="Source\Core\SDL_SystemImpl.cpp" />
-    <ClCompile Include="Source\Core\SDL_TextureImpl.cpp" />
-    <ClCompile Include="Source\Core\SDL_WindowImpl.cpp" />
     <ClCompile Include="Source\System_DebugController.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Image.cpp" />
@@ -161,25 +158,6 @@
     <ClCompile Include="Source\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Core\Engine.h" />
-    <ClInclude Include="Source\Core\File.h" />
-    <ClInclude Include="Source\Core\imgui\imconfig.h" />
-    <ClInclude Include="Source\Core\imgui\imgui.h" />
-    <ClInclude Include="Source\Core\imgui\imgui_impl_sdl.h" />
-    <ClInclude Include="Source\Core\imgui\imgui_internal.h" />
-    <ClInclude Include="Source\Core\imgui\stb_rect_pack.h" />
-    <ClInclude Include="Source\Core\imgui\stb_textedit.h" />
-    <ClInclude Include="Source\Core\imgui\stb_truetype.h" />
-    <ClInclude Include="Source\Core\imgui_impl_core.h" />
-    <ClInclude Include="Source\Core\Input.h" />
-    <ClInclude Include="Source\Core\LightVector.h" />
-    <ClInclude Include="Source\Core\Math.h" />
-    <ClInclude Include="Source\Core\Renderer.h" />
-    <ClInclude Include="Source\Core\SDL_CommonImpl.h" />
-    <ClInclude Include="Source\Core\Memory.h" />
-    <ClInclude Include="Source\Core\System.h" />
-    <ClInclude Include="Source\Core\Texture.h" />
-    <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\System_DebugController.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Image.h" />
@@ -204,6 +182,14 @@
       </ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Core.vcxproj">
+      <Project>{88cd9e0f-41f0-4bf8-82de-be21bdcac7cc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="CoreDX11.vcxproj">
+      <Project>{05e25724-338d-4117-bf8f-eacef8862a38}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

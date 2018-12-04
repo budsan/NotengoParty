@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{db090bc5-85c8-4e15-8c09-30cc1470d9ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\imgui">
+      <UniqueIdentifier>{ab01b67e-552b-4ba8-9fd1-422590de2c7c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\Window.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui\imconfig.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui\imgui.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui\imgui_internal.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui\stb_rect_pack.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui\stb_textedit.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui\stb_truetype.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Engine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\File.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Input.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\LightVector.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Memory.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Renderer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SDL_CommonImpl.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\System.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Texture.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\imgui_impl_core.h">
+      <Filter>Core\imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\imgui\imgui.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\imgui\imgui_draw.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Engine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\imgui_impl_core.cpp">
+      <Filter>Core\imgui</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
