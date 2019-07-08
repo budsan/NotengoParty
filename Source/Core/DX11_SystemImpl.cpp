@@ -21,12 +21,64 @@ void _sysDebugDecrMalloc()
 
 #endif
 
+System_DX11Impl dx11SysInst;
+
+int main(int argc, char* argv[]);
+
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_SIZE:
+		if (g_pd3dDevice != NULL && wParam != SIZE_MINIMIZED)
+		{
+			CleanupRenderTarget();
+			g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, 0);
+			CreateRenderTarget();
+		}
+		return 0;
+	case WM_SYSCOMMAND:
+		if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+			return 0;
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	dx11SysInst.hInstance = hInstance;
+	dx11SysInst.nCmdShow = nCmdShow;
+	ZeroMemory(&dx11SysInst.msg, sizeof(dx11SysInst.msg));
+
+	main(0, NULL);
+
+	return dx11SysInst.msg.wParam;
+}
+
 void System_Init(Engine* engine)
 {
+	
 }
 
 void System_Update(Engine* engine)
 {
+	while (dx11SysInst.msg.message != WM_QUIT)
+	{
+		if (PeekMessage(&dx11SysInst.msg, NULL, 0U, 0U, PM_REMOVE))
+		{
+			TranslateMessage(&dx11SysInst.msg);
+			DispatchMessage(&dx11SysInst.msg);
+		}
+	}
+	
+	if (dx11SysInst.msg.message == WM_QUIT)
+	{
+		engine->Close();
+	}
 }
 
 void System_Quit(Engine* engine)
